@@ -13,70 +13,68 @@
 
     <style>
         :root {
-            --primary-teal: #008998;
-            --secondary-teal: #00a7b9;
-            --dark-teal: #005f69;
+            --primary-teal: #28aae1;
+            --secondary-teal: #4fc3f7;
+            --dark-teal: #0077c2;
             --light-grey: #f0f2f5;
             --medium-grey: #e9ecef;
             --dark-grey: #333333;
             --text-color: #555;
             --white: #ffffff;
         }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         html {
             scroll-behavior: smooth;
         }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--light-grey);
             color: var(--text-color);
             line-height: 1.7;
         }
+
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         ul { list-style: none; }
         img { max-width: 100%; display: block; object-fit: cover; }
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 20px;
         }
+
         .btn {
             display: inline-block;
-            padding: 10px 30px;
+            padding: 12px 35px;
             background: var(--primary-teal);
             color: var(--white);
             border-radius: 50px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border: 2px solid var(--primary-teal);
+            border: none;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(40, 170, 225, 0.4);
             transition: 0.3s;
         }
         .btn:hover {
             background: var(--secondary-teal);
-            border-color: var(--secondary-teal);
+            transform: translateY(-2px);
         }
-        .btn-outline {
-            background: transparent;
-            color: var(--white);
-            border: 1px solid var(--white);
-            border-radius: 50px;
-        }
-        .btn-outline:hover {
-            background: var(--white);
-            color: var(--primary-teal);
-        }
+        
         .navbar {
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 15px 25px;
-            background: var(--primary-teal);
+            background: var(--white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
@@ -88,14 +86,14 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--white);
+            color: var(--primary-teal);
         }
         .mobile-toggle {
             font-size: 1.8rem;
             cursor: pointer;
             position: absolute;
             right: 25px;
-            color: var(--white);
+            color: var(--primary-teal);
         }
         .mobile-menu {
             position: fixed;
@@ -136,6 +134,7 @@
             color: var(--white);
             cursor: pointer;
         }
+
         .hero-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -166,6 +165,7 @@
             padding: 0 15px;
         }
         .hero-content h3 { font-size: 1.2rem; margin-bottom: 10px; }
+
         .latest-section { padding: 60px 0; }
         .section-header { text-align: center; margin-bottom: 40px; }
         .section-header h2 { font-size: 1.8rem; text-transform: uppercase; color: var(--dark-grey); margin-bottom: 5px;}
@@ -212,17 +212,19 @@
         }
         .kategori-list { display: grid; gap: 15px; max-width: 600px; margin: 0 auto; }
         .kategori-btn {
-            background: rgba(0, 137, 152, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: var(--primary-teal);
+            box-shadow: 0 4px 15px rgba(40, 170, 225, 0.3);
+            border: none;
             padding: 15px;
             border-radius: 50px;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #fff;
         }
-        .kategori-btn:hover { background: var(--white); color: var(--primary-teal); }
+        .kategori-btn:hover { background: var(--secondary-teal); }
         .special-section {
             padding: 100px 20px;
             text-align: center;

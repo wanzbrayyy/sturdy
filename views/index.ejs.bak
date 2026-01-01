@@ -4,22 +4,22 @@
     <div class="hero-card">
         <img src="https://images.unsplash.com/photo-1542882245-35028005b4a5?q=80&w=1000" alt="Majelis">
         <div class="hero-content">
-            <h3 style="font-size: 1.1rem; font-weight: 600;">Majelis Darul Hikmah</h3>
-            <a href="#" class="btn btn-outline" style="padding: 6px 25px; font-size: 0.8rem; background: rgba(0,0,0,0.2); border-color: var(--secondary-teal); color: #fff; border-radius: 5px; margin-top: 5px;">Mengenal</a>
+            <h3>Majelis Darul Hikmah</h3>
+            <a href="#" class="btn" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</a>
         </div>
     </div>
     <div class="hero-card">
         <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000" alt="Ustad">
         <div class="hero-content">
-            <h3 style="font-size: 1.1rem; font-weight: 600;">Ustad Khaliel Anwar</h3>
-            <a href="#" class="btn btn-outline" style="padding: 6px 25px; font-size: 0.8rem; background: rgba(0,0,0,0.2); border-color: var(--secondary-teal); color: #fff; border-radius: 5px; margin-top: 5px;">Mengenal</a>
+            <h3>Ustad Khaliel Anwar</h3>
+            <a href="#" class="btn" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</a>
         </div>
     </div>
     <div class="hero-card">
         <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000" alt="Buya">
         <div class="hero-content">
-            <h3 style="font-size: 1.1rem; font-weight: 600;">Buya Dhiyauddin Kuswandhi</h3>
-            <a href="#" class="btn btn-outline" style="padding: 6px 25px; font-size: 0.8rem; background: rgba(0,0,0,0.2); border-color: var(--secondary-teal); color: #fff; border-radius: 5px; margin-top: 5px;">Mengenal</a>
+            <h3>Buya Dhiyauddin Kuswandhi</h3>
+            <a href="#" class="btn" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</a>
         </div>
     </div>
 </div>
@@ -30,36 +30,31 @@
             <h2>Latest Article</h2>
             <p>Ambil dan share yang sekiranya bermanfaat dari tulisan ini</p>
         </div>
-        <div class="latest-article-grid">
+        <div class="list-article-container">
             <% if (articles.length > 0) { %>
-                <a href="/article/<%= articles[0]._id %>" class="main-article-card">
-                    <div class="article-thumb">
-                        <img src="/uploads/images/<%= articles[0].image %>" onerror="this.src='https://via.placeholder.com/600x300?text=Image'">
-                    </div>
-                    <div class="article-info">
-                        <p class="meta"><%= articles[0].category %></p>
-                        <h4><%= articles[0].title %></h4>
-                        <p><%= articles[0].content.substring(0, 150) %>...</p>
-                        <span class="article-author"><%= articles[0].author %> - <%= new Date(articles[0].publishedAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
-                        <span class="read-more">Selengkapnya</span>
-                    </div>
-                </a>
-                <div class="side-article-grid">
-                    <% articles.slice(1, 5).forEach(article => { %>
-                        <a href="/article/<%= article._id %>" class="side-article-card">
-                            <div class="article-thumb">
-                                <img src="/uploads/images/<%= article.image %>" onerror="this.src='https://via.placeholder.com/300x150?text=Image'">
-                            </div>
-                            <div class="article-info">
+                <% articles.forEach(article => { %>
+                    <a href="/article/<%= article._id %>" class="list-article-card">
+                        <div class="list-article-thumb">
+                            <img src="/uploads/images/<%= article.image %>" onerror="this.src='https://via.placeholder.com/300x200?text=Image'">
+                        </div>
+                        <div class="list-article-info">
+                            <div>
                                 <p class="meta"><%= article.category %></p>
                                 <h4><%= article.title %></h4>
+                                <p><%= article.content.substring(0, 120) %>...</p>
+                            </div>
+                            <div class="list-article-footer">
+                                <div class="list-article-author">
+                                    <%= article.author %>
+                                    <span><%= new Date(article.publishedAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                                </div>
                                 <span class="read-more">Selengkapnya</span>
                             </div>
-                        </a>
-                    <% }) %>
-                </div>
+                        </div>
+                    </a>
+                <% }) %>
             <% } else { %>
-                <p style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #fff; border-radius: 8px;">Belum ada artikel untuk ditampilkan.</p>
+                <p style="text-align: center; padding: 40px; background: #fff; border-radius: 8px;">Belum ada artikel untuk ditampilkan.</p>
             <% } %>
         </div>
         <div class="pagination">
@@ -137,7 +132,7 @@
                 <h3 style="text-transform: uppercase; font-size: 1.2rem;">Channel WhatsApp</h3>
                 <p style="font-size: 0.9rem;">Ikuti channel untuk mendapatkan update terbaru.</p>
             </div>
-            <a href="https://whatsapp.com/channel/0029VaospfkK0IBmrSnc1M17" target="_blank" class="btn" style="background: #fff; color: var(--secondary-teal); border-color: #fff;">IKUTI</a>
+            <a href="https://whatsapp.com/channel/0029VaospfkK0IBmrSnc1M17" target="_blank" class="btn">IKUTI</a>
         </div>
     </div>
 </div>
