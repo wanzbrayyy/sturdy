@@ -26,6 +26,49 @@
     .swal2-confirm:focus {
         box-shadow: 0 0 0 3px rgba(0, 137, 152, 0.3) !important;
     }
+
+    .hero-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        background: #ccc;
+    }
+    .hero-card {
+        position: relative;
+        height: 450px;
+        overflow: hidden;
+        background: #000;
+    }
+    .hero-card img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: top center;
+        filter: grayscale(100%) brightness(0.6);
+        transition: 0.4s;
+    }
+    .hero-card:hover img {
+        filter: grayscale(0) brightness(0.8);
+        transform: scale(1.05);
+    }
+    .hero-content {
+        position: absolute;
+        bottom: 30px;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        padding: 0 15px;
+        z-index: 2;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            grid-template-columns: 1fr;
+        }
+        .hero-card {
+            height: 400px;
+        }
+    }
 </style>
 
 <div class="hero-section">
@@ -52,7 +95,7 @@
     </div>
 </div>
 
-<div class="latest-section">
+<div class="latest-section" id="latest-section">
     <div class="container">
         <div class="section-header">
             <h2>Latest Article</h2>
@@ -69,7 +112,7 @@
                             <div>
                                 <p class="meta"><%= article.category %></p>
                                 <h4><%= article.title %></h4>
-                                <p><%= article.content.substring(0, 120) %>...</p>
+                                <p><%= article.content.replace(/(<([^>]+)>)/gi, "").substring(0, 100) %>...</p>
                             </div>
                             <div class="list-article-footer">
                                 <div class="list-article-author">
@@ -87,10 +130,10 @@
         </div>
         <div class="pagination">
             <% if (totalPages > 1) { %>
-                <span class="page-btn">Page <%= currentPage %> of <%= totalPages %></span>
                 <% if (currentPage > 1) { %>
                     <a href="/?page=<%= currentPage - 1 %>#latest-section" class="page-btn">Prev</a>
                 <% } %>
+                
                 <% for(let i = 1; i <= totalPages; i++) { %>
                     <% if (i === currentPage) { %>
                         <span class="page-btn active"><%= i %></span>
@@ -98,6 +141,7 @@
                         <a href="/?page=<%= i %>#latest-section" class="page-btn"><%= i %></a>
                     <% } %>
                 <% } %>
+
                 <% if (currentPage < totalPages) { %>
                     <a href="/?page=<%= currentPage + 1 %>#latest-section" class="page-btn">Next</a>
                 <% } %>
@@ -122,7 +166,7 @@
     </div>
 </div>
 
-<div class="special-section" style="background-image: url('/uploads/theme/background_aurad.jpg');">
+<div class="special-section" id="aurad" style="background-image: url('/uploads/theme/background_aurad.jpg');">
     <div class="special-content">
         <h2>Aurad Wirid</h2>
         <p>KUMPULAN DOA, DZIKIR, SHALAWAT, AMALAN, TEMBANG<br>YANG DI AJARKAN OLEH BUYA DHIYAUDDIN KUSWANDI</p>
@@ -130,7 +174,7 @@
     </div>
 </div>
 
-<div class="special-section" style="background-image: url('/uploads/theme/background_buya.jpg');">
+<div class="special-section" id="buya" style="background-image: url('/uploads/theme/background_buya.jpg');">
     <div class="special-content">
         <h2>Tulisan Buya</h2>
         <p>KUMPULAN TULISAN BUYA DHIYAUDDIN KUSWANDI<br>YANG KITA SALIN DARI FACEBOOK BELIAU "EMDEKA SAKAGURU"</p>
