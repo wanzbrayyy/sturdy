@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+
+<div class="container" style="padding: 60px 20px;">
+    <div class="section-header">
+        <h2>Pustaka Buku</h2>
+        <p>Karya-karya yang telah ditulis oleh para guru.</p>
+    </div>
+
+    <div class="book-grid">
+        <% if(books.length > 0) { %>
+            <% books.forEach(book => { %>
+                <a href="/article/<%= book._id %>" class="book-card">
+                    <img src="/uploads/images/<%= book.image %>" onerror="this.src='https://via.placeholder.com/200x300?text=Cover'">
+                    <h4><%= book.title %></h4>
+                </a>
+            <% }) %>
+        <% } else { %>
+            <p style="text-align: center;">Belum ada buku yang ditambahkan.</p>
+        <% } %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

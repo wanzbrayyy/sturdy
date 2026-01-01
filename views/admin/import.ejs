@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+
+<div class="container" style="max-width: 700px; padding-top: 40px; padding-bottom: 60px;">
+    
+    <div style="display:flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 30px;">
+        <h2 style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #333;">Impor Artikel dari Blogger</h2>
+        <a href="/admin" style="font-size: 0.9rem; color: #008998; font-weight: 600;">&larr; Kembali ke Dashboard</a>
+    </div>
+    
+    <div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+        
+        <% if(success_msg != '') { %>
+            <div class="alert alert-success" style="background: #d4edda; color: #155724; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #c3e6cb;">
+                <i class="fas fa-check-circle"></i> <%= success_msg %>
+            </div>
+        <% } %>
+
+        <% if(error_msg != '') { %>
+            <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <i class="fas fa-exclamation-triangle"></i> <%= error_msg %>
+            </div>
+        <% } %>
+        
+        <form action="/admin/import" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label style="font-weight: bold; display: block; margin-bottom: 10px;">Pilih File Backup Blogger (.xml atau .atom)</label>
+                <input type="file" name="backupfile" class="form-control" accept=".xml,.atom" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f9f9f9;">
+            </div>
+            
+            <div style="background: #eef7f8; border-left: 4px solid #008998; padding: 15px; margin-top: 20px; margin-bottom: 30px; border-radius: 4px;">
+                <h4 style="color: #005f69; margin-top: 0;">Petunjuk</h4>
+                <p style="font-size: 0.9rem; color: #333; line-height: 1.6;">
+                    Pastikan file yang Anda unggah adalah file backup **konten**, bukan tema. File ini biasanya bernama <strong><code>blog-DD-MM-YYYY.xml</code></strong> atau <strong><code>feed.atom</code></strong>.
+                </p>
+            </div>
+
+            <button type="submit" class="btn" style="background: #28a745; color: #fff; padding: 12px 30px; font-size: 1rem;">
+                <i class="fas fa-upload"></i> Unggah dan Impor
+            </button>
+        </form>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

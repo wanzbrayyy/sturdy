@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+<div class="container" style="max-width: 700px; padding-top: 40px; padding-bottom: 60px;">
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+        <h2>Impor Artikel dari Blogger (.xml)</h2>
+        <a href="/admin">Kembali ke Dashboard</a>
+    </div>
+    
+    <div style="background: #fff; padding: 30px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <% if(success_msg != '') { %>
+            <div class="alert alert-success"><%= success_msg %></div>
+        <% } %>
+        <% if(error_msg != '') { %>
+            <div class="alert alert-danger"><%= error_msg %></div>
+        <% } %>
+        
+        <form action="/admin/import" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Pilih File Backup Blogger (.xml)</label>
+                <input type="file" name="backupfile" class="form-control" accept=".xml" required>
+            </div>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px;">
+                Sistem akan membaca file XML Anda dan mengimpor semua postingan sebagai artikel baru. Proses ini mungkin memerlukan waktu beberapa saat.
+            </p>
+            <button type="submit" class="btn" style="background: #28a745; color: #fff;">Unggah dan Impor</button>
+        </form>
+    </div>
+</div>
+<%- include('../partials/footer') %>

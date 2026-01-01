@@ -1,0 +1,21 @@
+<%- include('../partials/header') %>
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #f0f2f5;">
+    <div style="background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px;">
+        <h2 style="text-align: center; margin-bottom: 20px; color: #008998;">Admin Login</h2>
+        <% if(error_msg != '') { %>
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px;"><%= error_msg %></div>
+        <% } %>
+        <form action="/admin/login" method="POST">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px;">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 5px;">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%; background: #008998; color: #fff;">Login</button>
+        </form>
+    </div>
+</div>
+<%- include('../partials/footer') %>

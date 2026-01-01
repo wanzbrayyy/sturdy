@@ -1,0 +1,84 @@
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Majelis Darul Hikmah</h4>
+                <p>
+                    Ustad Khaliel Anwar<br>
+                    Jl Semolowaru Selatan I No.82 Surabaya<br>
+                    teamdarulhikmah@gmail.com
+                </p>
+                <br>
+                <strong>INFAQ DAKWAH</strong>
+                <p>Bank Syariah Indonesia<br>No Rekening: 719803337</p>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Social Media</h4>
+                <a href="#">Youtube</a><br>
+                <a href="#">Facebook</a><br>
+                <a href="#">Tiktok</a><br>
+                <a href="#">Instagram</a>
+            </div>
+            <div class="footer-col">
+                <h4>Visitors</h4>
+                <img src="uploads/theme/flash.jpg" alt="Flag Counter" style="width: 150px; height: auto;">
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 0.8rem;">
+            &copy; Psikologi Tasawuf <%= new Date().getFullYear() %> | All Right Reserved
+        </div>
+    </div>
+</footer>
+
+<div style="background: #333; padding: 10px; text-align: center; color: #ccc; font-size: 0.8rem;">
+    Powered by WPS Office
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const closeMenu = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (menuToggle && mobileMenu && closeMenu) {
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+    }
+
+    const socket = io();
+    if (typeof ARTICLE_ID !== 'undefined') {
+        const articleId = ARTICLE_ID;
+        socket.emit('join_article', articleId);
+
+        socket.on('update_views', (views) => {
+            document.getElementById('view-count').innerText = `${views} Views`;
+        });
+
+        const commentForm = document.getElementById('comment-form');
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name-input').value;
+            const text = document.getElementById('text-input').value;
+            socket.emit('new_comment', { articleId, name, text });
+            document.getElementById('text-input').value = '';
+            document.getElementById('name-input').value = '';
+        });
+
+        socket.on('update_comment', (data) => {
+            const list = document.getElementById('comment-list');
+            const item = `
+                <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                    <strong>${data.name}</strong>
+                    <p style="margin-top: 5px;">${data.text}</p>
+                </div>
+            `;
+            list.insertAdjacentHTML('afterbegin', item);
+        });
+    }
+</script>
+</body>
+</html>

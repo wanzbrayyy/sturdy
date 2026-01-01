@@ -1,0 +1,203 @@
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const socketIo = require('socket.io');
+const mongoose = require('mongoose');
+const multer = require('multer');
+const methodOverride = require('method-override');
+const session = require('express-session');
+const flash = require('connect-flash');
+const fs = require('fs');
+const xml2js = require('xml2js');
+const connectDB = require('./config/database');
+
+const Article = require('./models/article');
+const Comment = require('./models/comment');
+const User = require('./models/user');
+const Youtube = require('./models/youtube');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
+connectDB();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+app.use(session({
+    secret: 'tasawuf_secret_key_2025',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1000 * 60 * 60 * 24 }
+}));
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.user = req.session.user || null;
+    next();
+});
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const imageStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, './uploads/images/'),
+    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+});
+const xmlStorage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, './backups/'),
+    filename: (req, file, cb) => cb(null, file.originalname)
+});
+
+const uploadImage = multer({ storage: imageStorage });
+const uploadXml = multer({ storage: xmlStorage });
+
+const protect = (req, res, next) => {
+    if (req.session.user) return next();
+    req.flash('error_msg', 'Silakan login terlebih dahulu.');
+    res.redirect('/admin/login');
+};
+
+const seedAdmin = async () => {
+    const adminExist = await User.findOne({ username: 'admin' });
+    if (!adminExist) await User.create({ username: 'admin', password: '123' });
+};
+seedAdmin();
+
+io.on('connection', (socket) => {
+    socket.on('join_article', (id) => socket.join(id));
+    socket.on('new_comment', async (data) => {
+        const nc = await Comment.create(data);
+        io.to(data.articleId).emit('update_comment', nc);
+    });
+});
+
+app.get('/', async (req, res) => {
+    const articles = await Article.find().sort({ createdAt: -1 }).limit(5);
+    const youtubes = await Youtube.find().sort({ order: 1 }).limit(3);
+    res.render('index', { articles, youtubes });
+});
+
+app.get('/article/:id', async (req, res) => {
+    try {
+        const article = await Article.findById(req.params.id);
+        if(!article) return res.redirect('/');
+        const comments = await Comment.find({ articleId: article._id }).sort({ createdAt: -1 });
+        article.views++;
+        await article.save();
+        io.to(req.params.id).emit('update_views', article.views);
+        res.render('detail', { article, comments });
+    } catch (err) {
+        res.redirect('/');
+    }
+});
+
+app.get('/books', async (req, res) => {
+    try {
+        const books = await Article.find({ category: 'Pustaka Buku' }).sort({ createdAt: -1 });
+        res.render('books', { books });
+    } catch (err) {
+        res.redirect('/');
+    }
+});
+
+app.get('/admin/login', (req, res) => res.render('admin/login'));
+app.post('/admin/login', async (req, res) => {
+    const user = await User.findOne({ username: req.body.username });
+    if (user && await user.matchPassword(req.body.password)) {
+        req.session.user = user;
+        res.redirect('/admin');
+    } else {
+        req.flash('error_msg', 'Username atau Password salah');
+        res.redirect('/admin/login');
+    }
+});
+app.get('/admin/logout', (req, res) => req.session.destroy(() => res.redirect('/admin/login')));
+
+app.get('/admin', protect, async (req, res) => {
+    const articles = await Article.find().sort({ createdAt: -1 });
+    res.render('admin/dashboard', { articles });
+});
+
+app.get('/admin/create', protect, (req, res) => res.render('admin/create'));
+app.post('/admin/store', protect, uploadImage.single('image'), async (req, res) => {
+    await Article.create({ ...req.body, image: req.file ? req.file.filename : 'default.jpg' });
+    req.flash('success_msg', 'Artikel berhasil dibuat.');
+    res.redirect('/admin');
+});
+
+app.get('/admin/edit/:id', protect, async (req, res) => {
+    const article = await Article.findById(req.params.id);
+    res.render('admin/edit', { article });
+});
+
+app.put('/admin/update/:id', protect, uploadImage.single('image'), async (req, res) => {
+    let updateData = req.body;
+    if (req.file) updateData.image = req.file.filename;
+    await Article.findByIdAndUpdate(req.params.id, updateData);
+    req.flash('success_msg', 'Artikel berhasil diperbarui.');
+    res.redirect('/admin');
+});
+
+app.delete('/admin/delete/:id', protect, async (req, res) => {
+    await Article.findByIdAndDelete(req.params.id);
+    req.flash('success_msg', 'Artikel berhasil dihapus.');
+    res.redirect('/admin');
+});
+
+app.get('/admin/import', protect, (req, res) => res.render('admin/import'));
+
+app.post('/admin/import', protect, uploadXml.single('backupfile'), async (req, res) => {
+    if (!req.file) {
+        req.flash('error_msg', 'Tidak ada file yang diunggah.');
+        return res.redirect('/admin/import');
+    }
+    const filePath = path.join(__dirname, 'backups', req.file.filename);
+    try {
+        const xmlData = fs.readFileSync(filePath, 'utf-8');
+        const parser = new xml2js.Parser();
+        const result = await parser.parseStringPromise(xmlData);
+        if (!result.feed || !result.feed.entry) {
+            req.flash('error_msg', 'File XML tidak valid.');
+            return res.redirect('/admin/import');
+        }
+        const entries = result.feed.entry;
+        const articlesToSave = entries.filter(entry => {
+            return entry.id && entry.id[0] && entry.id[0].includes('post');
+        }).map(entry => {
+            const title = (entry.title && entry.title[0]) ? (entry.title[0]._ || entry.title[0]) : 'No Title';
+            const publishedAt = (entry.published && entry.published[0]) ? new Date(entry.published[0]) : new Date();
+            let content = '';
+            if (entry.content && entry.content[0]) {
+                const contentNode = entry.content[0];
+                if (typeof contentNode === 'string') {
+                    content = contentNode;
+                } else if (typeof contentNode === 'object' && contentNode._) {
+                    content = contentNode._;
+                }
+            }
+            return { title, content, publishedAt };
+        });
+        if (articlesToSave.length > 0) {
+            await Article.insertMany(articlesToSave, { ordered: false });
+            req.flash('success_msg', `${articlesToSave.length} artikel berhasil diimpor.`);
+        } else {
+            req.flash('error_msg', 'Tidak ada artikel yang dapat diimpor dari file ini.');
+        }
+    } catch (err) {
+        console.log(err);
+        req.flash('error_msg', 'Gagal memproses file. Terjadi kesalahan internal.');
+    } finally {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+        res.redirect('/admin/import');
+    }
+});
+
+const PORT = 3000;
+server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

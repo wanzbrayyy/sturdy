@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+<div class="container" style="padding: 40px 20px;">
+    <div class="section-header">
+        <h1>Kategori: <%= categoryName %></h1>
+    </div>
+    <div class="article-grid">
+        <% articles.forEach(article => { %>
+            <a href="/article/<%= article._id %>" class="article-card">
+                <div class="article-thumb"><img src="/uploads/images/<%= article.image %>" onerror="this.src='https://via.placeholder.com/120'"></div>
+                <div>
+                    <h4><%= article.title %></h4>
+                    <p style="font-size: 0.9rem; color: #666;"><%= article.content.substring(0, 50) %>...</p>
+                </div>
+            </a>
+        <% }) %>
+        <% if(articles.length === 0) { %>
+            <p>Tidak ada artikel dalam kategori ini.</p>
+        <% } %>
+    </div>
+</div>
+<%- include('partials/footer') %>
