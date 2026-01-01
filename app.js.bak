@@ -77,26 +77,9 @@ io.on('connection', (socket) => {
 });
 
 app.get('/', async (req, res) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = 6;
-        const skip = (page - 1) * limit;
-
-        const totalArticles = await Article.countDocuments();
-        const totalPages = Math.ceil(totalArticles / limit);
-
-        const articles = await Article.find().sort({ createdAt: -1 }).skip(skip).limit(limit);
-        const youtubes = await Youtube.find().sort({ order: 1 }).limit(3);
-
-        res.render('index', { 
-            articles, 
-            youtubes, 
-            currentPage: page, 
-            totalPages 
-        });
-    } catch (err) {
-        res.redirect('/');
-    }
+    const articles = await Article.find().sort({ createdAt: -1 }).limit(5);
+    const youtubes = await Youtube.find().sort({ order: 1 }).limit(3);
+    res.render('index', { articles, youtubes });
 });
 
 app.get('/article/:id', async (req, res) => {
