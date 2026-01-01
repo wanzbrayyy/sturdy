@@ -31,36 +31,28 @@
             <p>Ambil dan share yang sekiranya bermanfaat dari tulisan ini</p>
         </div>
         
-        <!-- Grid Container -->
         <div class="list-article-container">
             <% if (articles.length > 0) { %>
                 <% articles.forEach(article => { %>
-                    <div class="list-article-card">
-                        <a href="/article/<%= article._id %>" class="list-article-thumb">
+                    <a href="/article/<%= article._id %>" class="list-article-card">
+                        <div class="list-article-thumb">
                             <img src="/uploads/images/<%= article.image %>" alt="<%= article.title %>" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
-                        </a>
+                        </div>
                         <div class="list-article-info">
-                            <!-- Kategori -->
-                            <div class="meta"><%= article.category %></div>
-                            
-                            <!-- Judul -->
-                            <a href="/article/<%= article._id %>">
+                            <div>
+                                <p class="meta"><%= article.category %></p>
                                 <h4><%= article.title %></h4>
-                            </a>
-                            
-                            <!-- Excerpt -->
-                            <p><%= article.content.replace(/(<([^>]+)>)/gi, "").substring(0, 100) %>...</p>
-                            
-                            <!-- Footer: Penulis & Tanggal -->
+                                <p><%= article.content.replace(/(<([^>]+)>)/gi, "").substring(0, 100) %>...</p>
+                            </div>
                             <div class="list-article-footer">
                                 <div class="list-article-author">
                                     <%= article.author %>
-                                    <span><%= new Date(article.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                                    <span><%= new Date(article.publishedAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
                                 </div>
-                                <a href="/article/<%= article._id %>" class="read-more">SELENGKAPNYA</a>
+                                <span class="read-more">SELENGKAPNYA</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 <% }) %>
             <% } else { %>
                 <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #f9f9f9; border-radius: 8px;">
@@ -70,12 +62,24 @@
         </div>
 
         <div class="pagination">
-            <span class="page-btn">Prev</span>
-            <span class="page-btn active">1</span>
-            <span class="page-btn">2</span>
-            <span class="page-btn">3</span>
-            <span class="page-btn">...</span>
-            <span class="page-btn">Next</span>
+            <% if (totalPages > 1) { %>
+                <span class="page-btn">Page <%= currentPage %> of <%= totalPages %></span>
+                <% if (currentPage > 1) { %>
+                    <a href="/?page=<%= currentPage - 1 %>#latest-section" class="page-btn">Prev</a>
+                <% } %>
+
+                <% for(let i = 1; i <= totalPages; i++) { %>
+                    <% if (i === currentPage) { %>
+                        <span class="page-btn active"><%= i %></span>
+                    <% } else { %>
+                        <a href="/?page=<%= i %>#latest-section" class="page-btn"><%= i %></a>
+                    <% } %>
+                <% } %>
+                
+                <% if (currentPage < totalPages) { %>
+                    <a href="/?page=<%= currentPage + 1 %>#latest-section" class="page-btn">Next</a>
+                <% } %>
+            <% } %>
         </div>
     </div>
 </div>
