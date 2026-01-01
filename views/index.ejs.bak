@@ -1,25 +1,53 @@
 <%- include('partials/header') %>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<style>
+    .swal2-popup {
+        font-family: 'Poppins', sans-serif !important;
+        background-color: #fff !important;
+        border-radius: 12px !important;
+    }
+    .swal2-title {
+        color: var(--primary-teal) !important;
+        font-weight: 700 !important;
+    }
+    .swal2-html-container {
+        color: #555 !important;
+        text-align: left !important;
+        line-height: 1.8 !important;
+    }
+    .swal2-confirm {
+        background-color: var(--primary-teal) !important;
+        border-radius: 50px !important;
+        padding: 10px 30px !important;
+        box-shadow: none !important;
+    }
+    .swal2-confirm:focus {
+        box-shadow: 0 0 0 3px rgba(0, 137, 152, 0.3) !important;
+    }
+</style>
+
 <div class="hero-section">
     <div class="hero-card">
         <img src="https://images.unsplash.com/photo-1542882245-35028005b4a5?q=80&w=1000" alt="Majelis">
         <div class="hero-content">
             <h3>Majelis Darul Hikmah</h3>
-            <a href="#" class="btn" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</a>
+            <button class="btn" onclick="showInfo('majelis')" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</button>
         </div>
     </div>
     <div class="hero-card">
         <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1000" alt="Ustad">
         <div class="hero-content">
             <h3>Ustad Khaliel Anwar</h3>
-            <a href="#" class="btn" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</a>
+            <button class="btn" onclick="showInfo('ustad')" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</button>
         </div>
     </div>
     <div class="hero-card">
         <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000" alt="Buya">
         <div class="hero-content">
             <h3>Buya Dhiyauddin Kuswandhi</h3>
-            <a href="#" class="btn" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</a>
+            <button class="btn" onclick="showInfo('buya')" style="padding: 8px 30px; font-size: 0.9rem;">Mengenal</button>
         </div>
     </div>
 </div>
@@ -30,44 +58,39 @@
             <h2>Latest Article</h2>
             <p>Ambil dan share yang sekiranya bermanfaat dari tulisan ini</p>
         </div>
-        
         <div class="list-article-container">
             <% if (articles.length > 0) { %>
                 <% articles.forEach(article => { %>
                     <a href="/article/<%= article._id %>" class="list-article-card">
                         <div class="list-article-thumb">
-                            <img src="/uploads/images/<%= article.image %>" alt="<%= article.title %>" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+                            <img src="/uploads/images/<%= article.image %>" onerror="this.src='https://via.placeholder.com/300x200?text=Image'">
                         </div>
                         <div class="list-article-info">
                             <div>
                                 <p class="meta"><%= article.category %></p>
                                 <h4><%= article.title %></h4>
-                                <p><%= article.content.replace(/(<([^>]+)>)/gi, "").substring(0, 100) %>...</p>
+                                <p><%= article.content.substring(0, 120) %>...</p>
                             </div>
                             <div class="list-article-footer">
                                 <div class="list-article-author">
                                     <%= article.author %>
                                     <span><%= new Date(article.publishedAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
                                 </div>
-                                <span class="read-more">SELENGKAPNYA</span>
+                                <span class="read-more">Selengkapnya</span>
                             </div>
                         </div>
                     </a>
                 <% }) %>
             <% } else { %>
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; background: #f9f9f9; border-radius: 8px;">
-                    <p>Belum ada artikel untuk ditampilkan.</p>
-                </div>
+                <p style="text-align: center; padding: 40px; background: #fff; border-radius: 8px;">Belum ada artikel untuk ditampilkan.</p>
             <% } %>
         </div>
-
         <div class="pagination">
             <% if (totalPages > 1) { %>
                 <span class="page-btn">Page <%= currentPage %> of <%= totalPages %></span>
                 <% if (currentPage > 1) { %>
                     <a href="/?page=<%= currentPage - 1 %>#latest-section" class="page-btn">Prev</a>
                 <% } %>
-
                 <% for(let i = 1; i <= totalPages; i++) { %>
                     <% if (i === currentPage) { %>
                         <span class="page-btn active"><%= i %></span>
@@ -75,7 +98,6 @@
                         <a href="/?page=<%= i %>#latest-section" class="page-btn"><%= i %></a>
                     <% } %>
                 <% } %>
-                
                 <% if (currentPage < totalPages) { %>
                     <a href="/?page=<%= currentPage + 1 %>#latest-section" class="page-btn">Next</a>
                 <% } %>
@@ -154,3 +176,64 @@
 </div>
 
 <%- include('partials/footer') %>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showInfo(type) {
+        let title = '';
+        let htmlContent = '';
+
+        if (type === 'ustad') {
+            title = 'Ustad Khaliel Anwar';
+            htmlContent = `
+                <p>Pernah nyantri di Pondok Pesantren Annuqayah, Sumenep, Madura. Mengambil S-1 di Fakultas Hukum Universitas Dr. Soetomo, Surabaya. Di sana beliau sempat diamanahi menjadi Ketua BEM pada tahun 2004.</p>
+                <p>Beliau mengenal tasawuf dari bimbingan K.H. Muhammad Dhiyauddin Kushwandhi melalui Majelis Tasbih Nusantara yang bertempat di Sidoarjo, Jawa Timur. Kini, waktu-waktunya lebih banyak dicurahkan untuk membaca, menulis, dan menyampaikan pencerahan di beberapa masjid, perkantoran dan majelis ilmu.</p>
+                <p>Majelis Darul Hikmah adalah majelis yang diasuh nya. Beliau bisa dihubungi melalui e-mail: khalbuz@gmail.com, Facebook: Khaliel Anwar.</p>
+            `;
+        } else if (type === 'buya') {
+            title = 'Buya Dhiyauddin Kuswandhi';
+            htmlContent = `
+                <p>Beliau dilahirkan di kota Lamongan, Jawa Timur pada tanggal 12 Februari 1961/ 27 Sya’ban 1380 H. Beliau mulai mengenyam pendidikan formal di usia 7 tahun sekaligus mendapatkan pendidikan dan gemblengan langsung dari ayahnya, Kyayi Ahmadun. Setiap kali Kyayi Ahmadun mewedar kajian untuk masyarakat sekitar, beliau selalu mendengar dengan cermat, meski dengan tingkah seorang anak kecil yang bermain ke sana ke mari.</p>
+                <p>Suatu saat Kyai Ahmadun melemparkan pertanyaan pada jamaahnya terkait pesan inti dari surat al-fiil. Semua jamaah terdiam, dan beliau justru menjawabnya dengan sangat cerdas, tawakkal pada Allah. Sejak kecil beliau dikenal cerdas.</p>
+                <p>Selesai mengenyam pendidikan di kota Lamongan, dari tahun 1974 hingga 1980 beliau melanjutkan pendidikan PGA (Pendidikan Guru Agama) di dua kota yang berbeda. Empat tahun beliau belajar di Kota Lamongan, sembari beliau nyantri di Pesantren al-Falah. Sementara dua tahun berikutnya beliau selesaikan di kota Gresik, sekaligus mendalami ilmu agama dibawah bimbingan Kyai Zubair Kauman Gresik. Setelah tuntas menyelesaikan PGA, beliau meneruskan studi S1 di PAI (Pendidikan Agama Islam) di IAIN Sunan Ampel Malang. Sebagaiamana di Gresik beliau mendapatkan tempaan ruhani dari Kyai Zubair, maka ketika kuliah di Malang, beliau memeroleh ilmu agama yang mencerahkan dari Ustadz Abdullah Abdun, di Pesantren Darut Tauhid.</p>
+                <p>Tatkala beliau kuliah di Malang, telah merangkum banyak prestasi secara akademik juga secara organisatoris. Beliau sempat didapuk menjai ketua HMI IAIN Sunan Ampel Malang. Beliau orang yang sangat rasional. Selalu tampil jadi pemenang di setiap diskusi. Sehingga tibalah saatnya, beliau mendatangi sebuah seminar yang akan dihadiri seorang ulama dari Mekah. Beliau diminta oleh salah satu gurunya untuk hadir, mengikuti seminar tersebut. Beliau menghadiri seminar itu, dan kebanyakan peserta yang datang mengenakan sarung. Karena banyak dari kalangan pesantren. Ternyata sosok yang akan memberikan seminar saat itu adalah Prof. Assayyid Muhammad bin Alawi al-Malaki al-Hasani.</p>
+                <p>Ulama dari Mekah ini membawakan tema tentang kebangkitan Islam (yaqdhatal Islam). Setelah seminar usai, semua peserta, secara bergiliran, berjabat tangan dengan Assayyid Muhammad Alawi. Seluruh peserta antri untuk berjabat tangan dengan Guru Besar tersebut. Abuya Dhiyauddin yang masih sangat muda saat itu, memilih berada di antrian terakhir. Tiba waktunya beliau bermusafahah dengan Gurunya para ulama Nusantara itu, beliau didekap, sembari dibisikkan ke telinga beliau, anta min jumadil awliya.</p>
+                <p>Demi mendapat dekapan dan bisikan dahsyat tersebut, beliau mengalami kondisi spiritual yang sangat dahsyat. Orientasi hidup beliau tiba-tiba berubah secara revolusioner. Kesadaran beliau dikuasai oleh perkara yang terkait dengan kematian dan kehidupan setelahnya.</p>
+            `;
+        } else if (type === 'majelis') {
+            title = 'Majelis Darul Hikmah';
+            htmlContent = `
+                <p>Berdiri di tahun 2019. Di bimbing oleh Ustad Khaliel Anwar.</p>
+                <strong>Memiliki beberapa kajian dan kegiatan yakni:</strong>
+                <ul>
+                    <li>Kajian rutinan "Psikologi Tasawuf" setiap Hari Rabu jam 8 malam</li>
+                    <li>Kajian "Keluarga Sakinah" setiap satu bulan sekali. Keliling di rumah jamaah</li>
+                    <li>Kajian Kitab al-Mawa'iz Fi al-Ahadits al-Qudsiyyah</li>
+                    <li>Kajian Sirah Awliyah oleh Ustad Iim NUrhadi</li>
+                    <li>Santunan Bulanan Anak Yatim</li>
+                    <li>Kegiatan Mabit (Malam Bina Iman dan Takwa)</li>
+                    <li>Kegiatan Tahunan Ziarah Wali dan Ulama Nusantara di Bulan Sya'ban</li>
+                    <li>Kegiatan Tahunan Perayaan Maulid Nabi</li>
+                </ul>
+                <br>
+                <strong>Mengaji dan Mengkaji Kitab:</strong>
+                <ul>
+                    <li>Dalail Khairat</li>
+                    <li>Shalawat Quraniyah</li>
+                    <li>Qolbu Quran</li>
+                    <li>Munajat Quran</li>
+                    <li>Jawsyan Kabir</li>
+                    <li>Dzikir Pagi Petang Abuya Dhiyauddin Kuswandhi</li>
+                    <li>Dan Kitab Lainnya</li>
+                </ul>
+            `;
+        }
+
+        Swal.fire({
+            title: title,
+            html: htmlContent,
+            width: '80%',
+            confirmButtonText: 'Tutup'
+        });
+    }
+</script>
