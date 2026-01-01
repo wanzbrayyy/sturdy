@@ -74,7 +74,7 @@
             justify-content: center;
             align-items: center;
             padding: 15px 25px;
-            background: var(--white);
+            background: var(--primary-teal);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
@@ -86,14 +86,14 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--primary-teal);
+            color: var(--white);
         }
         .mobile-toggle {
             font-size: 1.8rem;
             cursor: pointer;
             position: absolute;
             right: 25px;
-            color: var(--primary-teal);
+            color: var(--white);
         }
         .mobile-menu {
             position: fixed;
@@ -101,8 +101,7 @@
             right: -100%;
             width: 100%;
             height: 100%;
-            background: rgba(0, 80, 90, 0.98);
-            backdrop-filter: blur(5px);
+            background: var(--primary-teal);
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -118,13 +117,14 @@
             text-align: center;
         }
         .mobile-menu ul li {
-            margin: 25px 0;
+            margin: 20px 0;
         }
         .mobile-menu ul li a {
             color: var(--white);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
         .close-menu {
             position: absolute;
@@ -149,7 +149,7 @@
         }
         .hero-card img {
             height: 100%;
-            width: 100%; /* Fix width */
+            width: 100%;
             filter: grayscale(100%) brightness(0.6);
             transition: 0.4s;
         }
@@ -167,10 +167,9 @@
         }
         .hero-content h3 { font-size: 1.2rem; margin-bottom: 10px; }
 
-        /* --- UPDATED STYLE FOR LATEST ARTICLE (GRID LAYOUT) --- */
         .latest-section { 
             padding: 60px 0;
-            background: #fff; /* Background putih agar bersih */
+            background: #fff;
         }
         .section-header { text-align: center; margin-bottom: 50px; }
         .section-header h2 { font-size: 1.8rem; text-transform: uppercase; color: var(--dark-grey); margin-bottom: 5px;}
@@ -178,16 +177,16 @@
         
         .list-article-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 Kolom */
-            gap: 30px; /* Jarak antar kartu */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
         }
         
         .list-article-card {
             display: flex;
-            flex-direction: column; /* Vertikal: Gambar atas, Teks bawah */
+            flex-direction: column;
             background: #fff;
-            border-radius: 4px; /* Sudut sedikit melengkung */
-            box-shadow: none; /* Hilangkan shadow default berat */
+            border-radius: 4px;
+            box-shadow: none;
             overflow: hidden;
             height: 100%;
             transition: transform 0.3s ease;
@@ -199,7 +198,7 @@
 
         .list-article-thumb {
             width: 100%;
-            height: 250px; /* Tinggi gambar fixed */
+            height: 250px;
             overflow: hidden;
             position: relative;
         }
@@ -216,7 +215,7 @@
         }
 
         .list-article-info {
-            padding: 20px 0; /* Padding atas bawah saja */
+            padding: 20px 0;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -250,9 +249,9 @@
         .list-article-footer { 
             display: flex; 
             justify-content: space-between; 
-            align-items: flex-end; /* Align bottom */
+            align-items: flex-end;
             margin-top: auto;
-            border-top: 1px solid #eee; /* Garis pemisah tipis opsional */
+            border-top: 1px solid #eee;
             padding-top: 15px;
         }
         
@@ -277,7 +276,6 @@
             text-transform: uppercase; 
             letter-spacing: 1px;
         }
-        /* --- END UPDATED STYLE --- */
 
         .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 50px; }
         .page-btn { padding: 8px 14px; background: #fff; color: #555; border-radius: 4px; border: 1px solid #eee; transition: 0.3s; cursor: pointer; }
@@ -352,8 +350,7 @@
             .hero-card { height: 250px; }
             .nav-logo { font-size: 1rem; text-align: center; width: 100%; }
             .mobile-toggle { position: absolute; right: 20px; }
-            /* Mobile Article Grid */
-            .list-article-container { grid-template-columns: 1fr; } /* Balik ke 1 kolom di HP */
+            .list-article-container { grid-template-columns: 1fr; }
             .list-article-card { flex-direction: column; }
             .list-article-thumb { height: 200px; }
         }
@@ -370,10 +367,11 @@
 <div class="mobile-menu" id="mobile-menu">
     <div class="close-menu" id="close-menu">&times;</div>
     <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="#kategori">Kategori</a></li>
-        <li><a href="#youtube">Youtube</a></li>
-        <li><a href="#footer">Kontak</a></li>
-        <% if(user) { %><li><a href="/admin">Admin</a></li><% } %>
+        <li><a href="/">HOME</a></li>
+        <li><a href="#latest">ARTIKEL</a></li>
+        <li><a href="#aurad">AURAD WIRID</a></li>
+        <li><a href="#buya">TULISAN BUYA</a></li>
+        <li><a href="/books">BUKU</a></li>
+        <% if(user) { %><li><a href="/admin">ADMIN</a></li><% } %>
     </ul>
 </div>
